@@ -18,8 +18,9 @@ const IndexPage = () => {
           reader.addEventListener("load", (event) => {
             console.log(event.target?.result);
             const content = event.target?.result;
-            const res = axios.post("/api/pages", {
-              data: content,
+            axios.post("/api/pages", {
+              content,
+              name: file.name,
             });
           });
           reader.readAsText(file, "utf-8");
