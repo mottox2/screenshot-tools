@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (method === "POST") {
     const result = await db.run(
       "INSERT INTO tbl (content) VALUES (?)",
-      new Date().toISOString()
+      req.body["data"]
     );
     res.status(200).json({ lastID: result.lastID });
   }
