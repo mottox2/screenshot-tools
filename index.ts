@@ -15,7 +15,7 @@ const args = arg({
 
 type Options = {
   width: number;
-  height: number;
+  height?: number;
   input: string;
 };
 
@@ -33,9 +33,18 @@ const capture = async (options: Options) => {
       "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
   });
   const page = await browser.newPage();
-  await page.setViewport({ width, height });
   await page.goto(path.join("file:", filePath));
-  await page.screenshot({ path: `${fileName}.png` });
+
+  if (height) {
+    await page.setViewport({ width, height });
+  } else {
+    let pageHeight = await page.evaluate(
+      () => document.documentElement.offsetHeight
+    );
+    await page.setViewport({ width, height: pageHeight });
+  }
+
+  await page.screenshot({ path: `${fileName}.png`, fullPage: !height });
 
   await browser.close();
 };
@@ -46,7 +55,7 @@ const capture = async (options: Options) => {
 
   await capture({
     width: args["--width"] || 1080,
-    height: args["--height"] || 740,
+    height: args["--height"],
     input,
   });
 })();
