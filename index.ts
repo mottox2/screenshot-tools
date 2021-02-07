@@ -38,9 +38,8 @@ const capture = async (options: Options) => {
   if (height) {
     await page.setViewport({ width, height });
   } else {
-    let pageHeight = await page.evaluate(
-      () => document.documentElement.offsetHeight
-    );
+    await page.setViewport({ width, height: 1000 }); // dummy
+    let pageHeight = await page.evaluate(() => document.body.offsetHeight);
     await page.setViewport({ width, height: pageHeight });
   }
 
